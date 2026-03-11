@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  prompt-router:
+    build: .
+    container_name: prompt-router
+    env_file:
+      - .env
+    volumes:
+      # Map the local route_log.jsonl so the output persists on the host
+      - ./route_log.jsonl:/app/route_log.jsonl
