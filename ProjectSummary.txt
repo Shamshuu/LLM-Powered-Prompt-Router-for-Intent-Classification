@@ -1,0 +1,36 @@
+This project is an LLM-Powered Prompt Router. Instead of using a single, generic AI prompt to answer every question, this application intelligently analyzes what the user is asking and routes their question to a specialized "expert persona" (like a coding expert, a data analyst, or a writing coach) to get a much better, tailored response.
+
+
+1. Purpose
+
+The purpose is to implement an advanced AI design pattern called "Classify then Respond." This solves the problem of "jack-of-all-trades" AI chatbots that give generic answers. By routing requests to specialized prompts, the application guarantees higher quality, context-aware responses while efficiently managing API costs.
+
+
+2. How Functionality is Implemented
+
+Intent Classification: 
+When a user sends a message, the classify_intent function runs first. It asks a fast AI model to analyze the text and return a strict JSON object containing the intent (e.g., "code", "writing") and a confidence score (e.g., 0.95).
+
+Routing & Generation: 
+Once classified, the route_and_respond function takes over. If the confidence is high enough (above 0.7), it selects the matching expert prompt from our prompts.json file. It then sends both the expert prompt and the user's message to a more powerful AI model to generate the final answer.
+
+Fallback Handling:
+If the system is confused, if the confidence score is too low, or if the API fails, the system safely falls back to an "unclear" state. It asks the user for clarification instead of guessing or crashing.
+
+Logging:
+Every single request, its classification score, and the final response are safely logged into a route_log.jsonl file to track performance and errors over time.
+
+
+3. How the Technologies Help
+
+Python:
+The core programming language used to build the logic, parse JSON, and handle the file system efficiently.
+
+Groq API (Llama 3 Models):
+We use Groq's insanely fast inference engine. We use a lightweight model (llama-3.1-8b-instant) to quickly classify the intent at a low cost, and a heavy-duty reasoning model (llama-3.3-70b-versatile) to generate the final, high-quality response.
+
+python-dotenv:
+A utility library that safely loads secret API keys from our .env file into the program so they are never hardcoded into the source code.
+
+Docker & Docker Compose:
+Containerizes the application. This ensures that the code, dependencies, and environment are bundled together so anyone can run the project perfectly on their machine with a single command (docker-compose up) without needing to manually install Python or configure environments.
